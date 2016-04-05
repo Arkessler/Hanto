@@ -1,0 +1,21 @@
+X BetaHanto initialized with BLUE moving first -> BLUE moves first
+X BetaHanto initialized with RED moving first -> RED moves first
+X First move is a sparrow at 0,0 -> OK
+X First move is a butterfly at 0,0 -> OK
+X First move not at 0,0 -> Exception
+X Second move not at 0,0 -> OK
+X Players make 3 moves -> OK
+X First move retrievable after second move (No move overwriting)
+X Player places piece on another piece -> Exception
+X Player places more than one butterfly -> Exception
+X Player places more than five sparrows -> Exception
+X Player places piece adjacent to another piece -> OK
+X Player places piece non-adjacent to another piece -> Exception
+X Player tries to move butterfly -> Exception
+X Player tries to move Sparrow -> Exception
+X Red player tries to make 4th move without placing butterfly -> Exception
+X Blue player tries to make 4th move without placing butterfly -> Exception
+X Six moves made no winner -> DRAW
+X Player makes move, blue butterfly surrounded -> RED_WINS
+X Player makes move, red Butterfly surrounded -> BLUE_WINS
+X Player makes move, both players butterflies surrounded -> DRAW
