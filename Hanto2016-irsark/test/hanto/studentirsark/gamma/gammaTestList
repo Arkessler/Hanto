@@ -1,0 +1,30 @@
+X GammaHanto initialized with BLUE moving first -> BLUE moves first
+X GammaHanto initialized with RED moving first -> RED moves first
+X First move is a sparrow at 0,0 -> OK
+X First move is a butterfly at 0,0 -> OK
+X First move not at 0,0 -> Exception
+X Second move not at 0,0 -> OK
+X Players make 3 moves -> OK
+X First move retrievable after second move (No move overwriting)
+X Player places piece on another piece -> Exception
+X Player places more than one butterfly -> Exception
+X Player places more than five sparrows -> Exception
+X Player places piece adjacent to piece of same color, non-adjacent to other color -> OK
+X Player places piece adjacent to piece of same color as well as piece of other color -> Exception
+X Player places piece non-adjacent to another piece -> Exception
+X Player tries to move non-existent piece -> Exception
+X Player tries to move placed piece, trapped -> Exception
+X Player tries to move place piece onto another piece -> Exception
+X Player tries to move placed piece, open space, contiguity violated -> Exception
+X Player tries to move placed piece, open space, contiguity maintained -> OK
+X Player tries to move piece with wrong piece type listed -> Exception
+X Player tries to move piece that is not their own -> Exception
+X Red player tries to make 4th move without placing butterfly -> Exception
+X Blue player tries to make 4th move without placing butterfly -> Exception
+- Twenty moves made no winner -> DRAW
+- Player places piece, blue butterfly surrounded -> RED_WINS
+- Player places piece, red Butterfly surrounded -> BLUE_WINS
+- Player places piece, both players butterflies surrounded -> DRAW
+- Player walks piece, blue butterfly surrounded -> RED_WINS
+- Player walks piece, red Butterfly surrounded -> BLUE_WINS
+- Player walks piece, both players butterflies surrounded -> DRAW

@@ -48,4 +48,5 @@ public class HantoPieceImpl implements HantoPiece
 	{
 		return type;
 	}
+	
 }

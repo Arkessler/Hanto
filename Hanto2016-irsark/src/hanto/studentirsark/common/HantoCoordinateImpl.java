@@ -12,6 +12,8 @@
 
 package hanto.studentirsark.common;
 
+import java.util.ArrayList;
+
 import hanto.common.HantoCoordinate;
 
 /**
@@ -54,6 +56,58 @@ public class HantoCoordinateImpl implements HantoCoordinate
 		return y;
 	}
 	
+	/*
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime*result+x;
+		result = prime*result+y;
+		return result;
+	}
+	
+	/*
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals (Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (!(obj instanceof HantoCoordinateImpl))
+		{
+			return false;
+		}
+		HantoCoordinateImpl other = (HantoCoordinateImpl) obj;
+		if (x != other.x)
+		{
+			return false;
+		}
+		if (y != other.y)
+		{
+			return false;
+		}
+		return true;
+	}
 
-
+	public ArrayList<HantoCoordinateImpl> getAdjacentCoordinates()
+	{
+		ArrayList<HantoCoordinateImpl> retList = new ArrayList<HantoCoordinateImpl>();
+		retList.add(new HantoCoordinateImpl(x-1, y));
+		retList.add(new HantoCoordinateImpl(x-1, y+1));
+		retList.add(new HantoCoordinateImpl(x, y+1));
+		retList.add(new HantoCoordinateImpl(x+1, y));
+		retList.add(new HantoCoordinateImpl(x+1, y-1));
+		retList.add(new HantoCoordinateImpl(x, y-1));
+		return retList;
+	}
 }
