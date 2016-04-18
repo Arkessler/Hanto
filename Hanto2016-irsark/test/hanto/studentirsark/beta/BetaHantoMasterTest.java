@@ -323,7 +323,7 @@ public class BetaHantoMasterTest
 			game.makeMove(BUTTERFLY, null, makeCoordinate(-3000, 1));
 		} catch (HantoException exception)
 		{
-			assertEquals("No adjacent piece", exception.getMessage());
+			assertEquals("Cannot have discontiguous piece", exception.getMessage());
 		}
 	}
 	
@@ -336,7 +336,7 @@ public class BetaHantoMasterTest
 			game.makeMove(BUTTERFLY, null, makeCoordinate(3000, 1));
 		} catch (HantoException exception)
 		{
-			assertEquals("No adjacent piece", exception.getMessage());
+			assertEquals("Cannot have discontiguous piece", exception.getMessage());
 		}
 	}
 	
@@ -349,7 +349,7 @@ public class BetaHantoMasterTest
 			game.makeMove(BUTTERFLY, null, makeCoordinate(0, 3000));
 		} catch (HantoException exception)
 		{
-			assertEquals("No adjacent piece", exception.getMessage());
+			assertEquals("Cannot have discontiguous piece", exception.getMessage());
 		}
 	}
 	
@@ -362,7 +362,7 @@ public class BetaHantoMasterTest
 			game.makeMove(BUTTERFLY, null, makeCoordinate(0, -3000));
 		} catch (HantoException exception)
 		{
-			assertEquals("No adjacent piece", exception.getMessage());
+			assertEquals("Cannot have discontiguous piece", exception.getMessage());
 		}
 	}
 	

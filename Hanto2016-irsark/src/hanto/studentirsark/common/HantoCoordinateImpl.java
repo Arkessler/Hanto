@@ -13,6 +13,7 @@
 package hanto.studentirsark.common;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import hanto.common.HantoCoordinate;
 
@@ -99,9 +100,13 @@ public class HantoCoordinateImpl implements HantoCoordinate
 		return true;
 	}
 
-	public ArrayList<HantoCoordinateImpl> getAdjacentCoordinates()
+	/**
+	 * Return a list of hanto coordinates that contains all coordinates adjacent ot the point
+	 * @return the list of adjacent hanto coordinates
+	 */
+	public List<HantoCoordinate> getAdjacentCoordinates()
 	{
-		ArrayList<HantoCoordinateImpl> retList = new ArrayList<HantoCoordinateImpl>();
+		List<HantoCoordinate> retList = new ArrayList<HantoCoordinate>();
 		retList.add(new HantoCoordinateImpl(x-1, y));
 		retList.add(new HantoCoordinateImpl(x-1, y+1));
 		retList.add(new HantoCoordinateImpl(x, y+1));

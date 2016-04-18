@@ -21,10 +21,7 @@ X Player tries to move piece with wrong piece type listed -> Exception
 X Player tries to move piece that is not their own -> Exception
 X Red player tries to make 4th move without placing butterfly -> Exception
 X Blue player tries to make 4th move without placing butterfly -> Exception
-- Twenty moves made no winner -> DRAW
-- Player places piece, blue butterfly surrounded -> RED_WINS
-- Player places piece, red Butterfly surrounded -> BLUE_WINS
-- Player places piece, both players butterflies surrounded -> DRAW
-- Player walks piece, blue butterfly surrounded -> RED_WINS
-- Player walks piece, red Butterfly surrounded -> BLUE_WINS
-- Player walks piece, both players butterflies surrounded -> DRAW
+X Twenty moves made no winner -> DRAW
+X Player walks piece, blue butterfly surrounded -> RED_WINS
+X Player walks piece, red Butterfly surrounded -> BLUE_WINS
+X Player walks piece, both players butterflies surrounded -> DRAW
