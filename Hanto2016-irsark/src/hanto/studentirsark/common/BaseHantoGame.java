@@ -42,8 +42,10 @@ public abstract class BaseHantoGame implements HantoGame{
 	//Piece types placement tracking
 	protected int blueButterfliesPlaced = 0;
 	protected int blueSparrowsPlaced = 0;
+	protected int blueCrabsPlaced = 0;
 	protected int redButterfliesPlaced = 0;
 	protected int redSparrowsPlaced = 0;
+	protected int redCrabsPlaced = 0;
 	
 	public BaseHantoGame(HantoPlayerColor firstPlayer)
 	{
@@ -83,7 +85,7 @@ public abstract class BaseHantoGame implements HantoGame{
 		
 		applyMove(pieceType, from, to, toCoordImpl, pieceImpl);
 		updateButterflyLocation(pieceType, to);
-		checkContiguity(to);
+		checkContiguity(to, this.board);
 		
 		MoveResult surroundedCheckResult = checkSurroundedWinCondition();
 		
@@ -98,28 +100,6 @@ public abstract class BaseHantoGame implements HantoGame{
 	 */
 	protected abstract MoveResult checkMaxTurnCount(MoveResult surroundedCheckResult);
 
-	/**
-	 * @param pieceType
-	 * @param from
-	 * @param to
-	 * @param toCoordImpl
-	 * @param pieceImpl
-	 * @throws HantoException
-	 */
-	private void applyMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to,
-			HantoCoordinateImpl toCoordImpl, HantoPieceImpl pieceImpl) throws HantoException {
-		if (from==null)	//If placing a new piece
-		{
-			placePiece(pieceType, to, toCoordImpl, pieceImpl);
-		}
-		else		//If moving a piece
-		{
-			checkMovingExistentPiece(from);
-			checkButterflyPlacedBeforeMove();
-			movePiece(pieceType, from, to, toCoordImpl, pieceImpl);
-		}
-	}
-
 	/* (non-Javadoc)
 	 * @see hanto.common.HantoGame#getPieceAt(hanto.common.HantoCoordinate)
 	 */
@@ -133,7 +113,7 @@ public abstract class BaseHantoGame implements HantoGame{
 	 * @param from: the location that a piece will be moved from
 	 * @throws HantoException 
 	 */
-	private void checkMovingExistentPiece(HantoCoordinate from) throws HantoException {
+	protected void checkMovingExistentPiece(HantoCoordinate from) throws HantoException {
 		if (getPieceAt(from) == null)
 		{
 			throw new HantoException("Trying to move a non-existant piece");
@@ -152,6 +132,29 @@ public abstract class BaseHantoGame implements HantoGame{
 		}
 		
 		return toReturn;
+	}
+	
+	protected void applyMove(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to,
+			HantoCoordinateImpl toCoordImpl, HantoPieceImpl pieceImpl) throws HantoException {
+		if (from==null)	//If placing a new piece
+		{
+			placePiece(pieceType, to, toCoordImpl, pieceImpl);
+		}
+		else		//If moving a piece
+		{
+			HantoCoordinateImpl fromCoordinateImpl = new HantoCoordinateImpl(from); 
+			checkMovingExistentPiece(from);
+			if (getPieceAt(fromCoordinateImpl).getColor() != playerColor)
+			{
+				throw new HantoException("Can't move opponent's piece");
+			}
+			if (getPieceAt(fromCoordinateImpl).getType() != pieceType)
+			{
+				throw new HantoException("Wrong piece type in makeMove");
+			}
+			checkButterflyPlacedBeforeMove();
+			movePiece(pieceType, from, to, toCoordImpl, pieceImpl);
+		}
 	}
 	
 	/**
@@ -282,7 +285,7 @@ public abstract class BaseHantoGame implements HantoGame{
 	 * @throws HantoException 
 	 * 
 	 */
-	protected void checkContiguity(HantoCoordinate nextPos) throws HantoException {
+	protected void checkContiguity(HantoCoordinate nextPos, Map<HantoCoordinate, HantoPiece> boardToCheck) throws HantoException {
 		HantoCoordinateImpl nextPosCoordImpl = new HantoCoordinateImpl(nextPos);
 		List<HantoCoordinate> visited = new ArrayList<HantoCoordinate>();
 		List<HantoCoordinate> toVisit = new ArrayList<HantoCoordinate>();
@@ -290,7 +293,7 @@ public abstract class BaseHantoGame implements HantoGame{
 		List<HantoCoordinate> adjacentToOrigin = nextPosCoordImpl.getAdjacentCoordinates();
 		for (HantoCoordinate coord :  adjacentToOrigin)
 		{
-			if ((getPieceAt(coord)!=null) && (!(visited.contains(coord))))
+			if ((getPieceAt(coord, boardToCheck)!=null) && (!(visited.contains(coord))))
 			{
 				toVisit.add(coord);
 			}
@@ -306,15 +309,53 @@ public abstract class BaseHantoGame implements HantoGame{
 			List<HantoCoordinate> adjacentToCurr = nextCoord.getAdjacentCoordinates();
 			for (HantoCoordinate coord :  adjacentToCurr)
 			{
-				if ((getPieceAt(coord)!=null) && (!(visited.contains(coord))))
+				if ((getPieceAt(coord, boardToCheck)!=null) && (!(visited.contains(coord))))
 				{
 					toVisit.add(coord);
 				}
 			}
 		}
-		if (visited.size() != board.size())
+		if (visited.size() != boardToCheck.size())
 		{
 			throw new HantoException("Cannot have discontiguous piece");
+		}
+	}
+	/**
+	 * @param coord
+	 * @param board2
+	 * @return
+	 */
+	private Object getPieceAt(HantoCoordinate where, Map<HantoCoordinate, HantoPiece> board2) {
+		HantoCoordinateImpl whereCoordImpl = new HantoCoordinateImpl(where);
+		return board.get(whereCoordImpl);
+	}
+
+	/**
+	 * @param where is the location to check if there are any adjacent pieces to
+	 */
+	protected void checkCoordinatePieceAdjacency(HantoCoordinate where) throws HantoException
+	{
+		HantoCoordinateImpl originImpl = new HantoCoordinateImpl(where);
+		boolean foundSameColorAdjacent = false;
+		List<HantoCoordinate> surroundingCoordinates = originImpl.getAdjacentCoordinates();
+		for (int i = 0; i < surroundingCoordinates.size(); i++)
+		{
+			HantoPiece pieceAtCoord = getPieceAt(surroundingCoordinates.get(i));
+			if (pieceAtCoord != null)
+			{
+				if (pieceAtCoord.getColor() == playerColor)
+				{
+					foundSameColorAdjacent = true;
+				}
+				else
+				{
+					throw new HantoException("Cannot place piece next to opponent piece");
+				}
+			}
+		}
+		if (!foundSameColorAdjacent)
+		{
+			throw new HantoException("Must place piece next to piece of same color");
 		}
 	}
 	

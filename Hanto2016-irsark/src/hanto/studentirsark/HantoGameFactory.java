@@ -12,6 +12,7 @@ package hanto.studentirsark;
 
 import hanto.common.*;
 import hanto.studentirsark.beta.BetaHantoGame;
+import hanto.studentirsark.delta.DeltaHantoGame;
 import hanto.studentirsark.gamma.GammaHantoGame;
 
 /**
@@ -66,6 +67,9 @@ public class HantoGameFactory
 				break;
 			case GAMMA_HANTO:
 				game = new GammaHantoGame(movesFirst);
+				break;
+			case DELTA_HANTO:
+				game = new DeltaHantoGame(movesFirst);
 				break;
 		}
 		return game;

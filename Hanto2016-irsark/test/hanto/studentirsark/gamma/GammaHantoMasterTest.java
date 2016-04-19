@@ -255,12 +255,12 @@ public class GammaHantoMasterTest {
 		game.makeMove(SPARROW, null, makeCoordinate(2, -1));
 		try
 		{
-			game.makeMove(SPARROW, makeCoordinate(0, 0), makeCoordinate(-1, 1));
+			game.makeMove(BUTTERFLY, makeCoordinate(0, 0), makeCoordinate(-1, 1));
 			//The test should not reach this point
 			assertTrue(false);
 		} catch (HantoException exc)
 		{
-			assertEquals("Cannot move through single hex opening", exc.getMessage());
+			assertEquals("Cannot find valid walking path to destination", exc.getMessage());
 		}
 		
 	}
@@ -321,7 +321,7 @@ public class GammaHantoMasterTest {
 			assertTrue(false);
 		} catch (HantoException exc)
 		{
-			assertEquals("Wrong piece type is makeMove", exc.getMessage());
+			assertEquals("Wrong piece type in makeMove", exc.getMessage());
 		}
 	}
 	

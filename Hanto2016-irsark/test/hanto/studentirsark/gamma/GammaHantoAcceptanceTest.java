@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import org.junit.*;
 import hanto.common.*;
 import hanto.studentirsark.HantoGameFactory;
+import hanto.studentirsark.common.HantoCoordinateImpl;
 
 public class GammaHantoAcceptanceTest
 {
@@ -265,6 +266,7 @@ public class GammaHantoAcceptanceTest
 	public void extraCreditMoveSparrowBeforeButterflyIsOnBoard() throws HantoException
 	{
 		makeMoves(md(SPARROW, 0, 0), md (BUTTERFLY, 0, 1));
+		game.makeMove(SPARROW, new HantoCoordinateImpl(0, 0), new HantoCoordinateImpl(0, -1));
 		final HantoPiece piece = game.getPieceAt(makeCoordinate(0, 0));
 		assertEquals(SPARROW, piece.getType());
 		assertEquals(BLUE, piece.getColor());

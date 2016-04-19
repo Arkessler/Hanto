@@ -31,6 +31,12 @@ public class HantoPieceImpl implements HantoPiece
 		this.color = color;
 		this.type = type;
 	}
+	
+	public HantoPieceImpl(HantoPiece piece)
+	{
+		this.color = piece.getColor();
+		this.type = piece.getType();
+	}
 	/*
 	 * @see hanto.common.HantoPiece#getColor()
 	 */
