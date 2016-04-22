@@ -15,10 +15,15 @@ package hanto.studentirsark.beta;
 import static hanto.common.MoveResult.DRAW;
 import static hanto.common.MoveResult.OK;
 
-import hanto.common.*;
+import hanto.common.HantoCoordinate;
+import hanto.common.HantoException;
+import hanto.common.HantoGame;
+import hanto.common.HantoPiece;
+import hanto.common.HantoPieceType;
+import hanto.common.HantoPlayerColor;
+import hanto.common.MoveResult;
 import hanto.studentirsark.common.BaseHantoGame;
 import hanto.studentirsark.common.HantoCoordinateImpl;
-import hanto.studentirsark.common.HantoPieceImpl;
 
 /**
  * The implementation of BetaHanto
@@ -56,17 +61,15 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame
 	 * @see hanto.studentirsark.common.BaseHantoGame#placePiece(hanto.common.HantoPieceType, hanto.common.HantoCoordinate, hanto.studentirsark.common.HantoCoordinateImpl, hanto.studentirsark.common.HantoPieceImpl)
 	 */
 	@Override
-	protected void placePiece(HantoPieceType pieceType, HantoCoordinate to, HantoCoordinateImpl toCoordImpl,
-			HantoPieceImpl pieceImpl) throws HantoException {
-		checkPieceCountValidity(pieceType);
-		board.put(toCoordImpl, pieceImpl);
+	protected void placePiece(HantoCoordinate to, HantoPiece piece) throws HantoException {
+		HantoCoordinate toCoordImpl = new HantoCoordinateImpl(to);
+		gameBoard.addPiece(toCoordImpl, piece);
 	}
 	/* (non-Javadoc)
 	 * @see hanto.studentirsark.common.BaseHantoGame#movePiece(hanto.common.HantoPieceType, hanto.common.HantoCoordinate, hanto.common.HantoCoordinate, hanto.studentirsark.common.HantoCoordinateImpl, hanto.studentirsark.common.HantoPieceImpl)
 	 */
 	@Override
-	protected void movePiece(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to,
-			HantoCoordinateImpl toCoordImpl, HantoPieceImpl pieceImpl) throws HantoException {
+	protected void movePiece(HantoCoordinate from, HantoCoordinate to, HantoPiece piece) throws HantoException {
 		throw new HantoException("Cannot move pieces in Beta Hanto");
 	}
 

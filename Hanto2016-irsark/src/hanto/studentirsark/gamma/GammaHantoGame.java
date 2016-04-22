@@ -49,16 +49,18 @@ public class GammaHantoGame extends BaseHantoGame implements HantoGame {
 	 * @throws HantoException
 	 */
 	@Override
-	protected void movePiece(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to,
-			HantoCoordinateImpl toCoordImpl, HantoPieceImpl pieceImpl) throws HantoException {
+	protected void movePiece(HantoCoordinate from, HantoCoordinate to, 
+			HantoPiece piece) throws HantoException {
+		
+		HantoCoordinate toCoordImpl = new HantoCoordinateImpl(to);
 		HantoCoordinateImpl fromCoordinateImpl = new HantoCoordinateImpl(from);
 		if (!(fromCoordinateImpl.getAdjacentCoordinates().contains(toCoordImpl)))
 		{
 			throw new HantoException("Cannot move more than one spot at once");
 		}
-			sparrowStrat.checkValidMovement(this, board, playerColor, pieceType, from, to, toCoordImpl, pieceImpl);
-			board.remove(fromCoordinateImpl);
-			board.put(toCoordImpl, pieceImpl);
+		sparrowStrat.checkValidMovement(gameBoard, playerColor, from, to, piece);
+		gameBoard.removePiece(fromCoordinateImpl);
+		gameBoard.addPiece(toCoordImpl, piece);
 	}
 
 	/**
@@ -69,15 +71,14 @@ public class GammaHantoGame extends BaseHantoGame implements HantoGame {
 	 * @throws HantoException
 	 */
 	@Override
-	protected void placePiece(HantoPieceType pieceType, HantoCoordinate to, HantoCoordinateImpl toCoordImpl,
-			HantoPieceImpl pieceImpl) throws HantoException {
-		checkPieceCountValidity(pieceType);
+	protected void placePiece(HantoCoordinate to, HantoPiece piece) throws HantoException {
 		//Ignore adjacency rules for the first two turns
 		if (blueTurnsTaken + redTurnsTaken > 2)
 		{
 			checkCoordinatePieceAdjacency(to);
 		}
-		board.put(toCoordImpl, pieceImpl);
+		HantoCoordinate toCoordImpl = new HantoCoordinateImpl(to);
+		gameBoard.addPiece(toCoordImpl, piece);
 	}
 
 	/**

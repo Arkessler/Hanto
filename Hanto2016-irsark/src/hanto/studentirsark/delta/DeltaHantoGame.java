@@ -41,6 +41,7 @@ public class DeltaHantoGame extends BaseHantoGame implements HantoGame {
 	 */
 	public DeltaHantoGame(HantoPlayerColor firstPlayer) {
 		super(firstPlayer);
+		gameAcceptsResignations = true;
 	}
 
 	/* (non-Javadoc)
@@ -59,15 +60,14 @@ public class DeltaHantoGame extends BaseHantoGame implements HantoGame {
 	 * @throws HantoException
 	 */
 	@Override
-	protected void placePiece(HantoPieceType pieceType, HantoCoordinate to, HantoCoordinateImpl toCoordImpl,
-			HantoPieceImpl pieceImpl) throws HantoException {
-		checkPieceCountValidity(pieceType);
+	protected void placePiece(HantoCoordinate to, HantoPiece piece) throws HantoException {
 		//Ignore adjacency rules for the first two turns
 		if (blueTurnsTaken + redTurnsTaken > 2)
 		{
 			checkCoordinatePieceAdjacency(to);
 		}
-		board.put(toCoordImpl, pieceImpl);
+		HantoCoordinate toCoordImpl = new HantoCoordinateImpl(to);
+		gameBoard.addPiece(toCoordImpl, piece);
 	}
 	
 	
@@ -76,33 +76,28 @@ public class DeltaHantoGame extends BaseHantoGame implements HantoGame {
 	 * @see hanto.studentirsark.common.BaseHantoGame#movePiece(hanto.common.HantoPieceType, hanto.common.HantoCoordinate, hanto.common.HantoCoordinate, hanto.studentirsark.common.HantoCoordinateImpl, hanto.studentirsark.common.HantoPieceImpl)
 	 */
 	@Override
-	protected void movePiece(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to,
-			HantoCoordinateImpl toCoordImpl, HantoPieceImpl pieceImpl) throws HantoException {
+	protected void movePiece(HantoCoordinate from, HantoCoordinate to,
+			HantoPiece piece) throws HantoException {
 		HantoCoordinateImpl fromCoordinateImpl = new HantoCoordinateImpl(from);
-		
-		if (pieceType == BUTTERFLY)
+		HantoCoordinate toCoordImpl = new HantoCoordinateImpl(to);
+		if (piece.getType() == BUTTERFLY)
 		{
-			butterflyMoveStrat.checkValidMovement(this, board, playerColor, pieceType, from, to, toCoordImpl, pieceImpl);
-			board.remove(fromCoordinateImpl);
-			board.put(toCoordImpl, pieceImpl);
+			butterflyMoveStrat.checkValidMovement(gameBoard, playerColor, from, to, piece);
+			gameBoard.removePiece(fromCoordinateImpl);
+			gameBoard.addPiece(toCoordImpl, piece);
 		}
-		else if (pieceType == SPARROW)
+		else if (piece.getType() == SPARROW)
 		{
-			sparrowMoveStrat.checkValidMovement(this, board, playerColor, pieceType, from, to, toCoordImpl, pieceImpl);
-			board.remove(fromCoordinateImpl);
-			board.put(toCoordImpl, pieceImpl);
+			sparrowMoveStrat.checkValidMovement(gameBoard, playerColor, from, to, piece);
+			gameBoard.removePiece(fromCoordinateImpl);
+			gameBoard.addPiece(toCoordImpl, piece);
 		}
-		else if (pieceType == CRAB)
+		else if (piece.getType() == CRAB)
 		{
-			crabMoveStrat.checkValidMovement(this, board, playerColor, pieceType, from, to, toCoordImpl, pieceImpl);
-			board.remove(fromCoordinateImpl);
-			board.put(toCoordImpl, pieceImpl);
-		}
-		else
-		{
-			throw new HantoException("Not a valid move");
-		}
-	
+			crabMoveStrat.checkValidMovement(gameBoard, playerColor, from, to, piece);
+			gameBoard.removePiece(fromCoordinateImpl);
+			gameBoard.addPiece(toCoordImpl, piece);
+		}	
 	}
 
 	/* (non-Javadoc)

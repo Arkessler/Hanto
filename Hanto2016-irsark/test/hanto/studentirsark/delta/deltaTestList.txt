@@ -20,22 +20,21 @@ x Player tries to walk placed crab, trapped -> Exception
 x Player tries to fly placed sparrow, trapped -> OK
 x Player tries to move place piece onto another piece -> Exception
 x Player tries to walk placed butterfly 1 hex, open space, contiguity maintained -> OK
- Player tries to walk placed butterfly 1 hex, open space, contiguity not maintained -> Exception
+x Player tries to walk placed butterfly 1 hex, open space, contiguity not maintained -> Exception
 x Player tries to walk placed butterfly 2 hexes, open space, contiguity maintained -> Exception
 x Player tries to walk placed crab 1 hex, open space, contiguity maintained -> OK
 x Player tries to walk placed crab 2 hexes, open space, contiguity maintained -> OK
 x Player tries to walk placed crab 3 hexes, open space, contiguity maintained -> OK
- Player tries to walk placed crab 3 hexes, open space, contiguity not maintained -> Exception
+x Player tries to walk placed crab 3 hexes, open space, contiguity not maintained -> Exception
 x Player tries to walk placed crab 4 hexes, open space, contiguity maintained -> Exception
- Player tries to fly placed sparrow unwalkable path, open space, contiguity maintained -> OK
- Player tries to fly placed sparrow, open space, contiguity not maintained -> Exception
- Player tries to move piece with wrong piece type listed -> Exception
- Player tries to move piece that is not their own -> Exception
- Red player tries to make 4th move without placing butterfly -> Exception
- Blue player tries to make 4th move without placing butterfly -> Exception
- Twenty moves made no winner -> DRAW
- Player walks piece, blue butterfly surrounded -> RED_WINS
- Player walks piece, red Butterfly surrounded -> BLUE_WINS
- Player walks piece, both players butterflies surrounded -> DRAW
- Blue player resigns -> RED_WINS
- Red player resigns -> BLUE_WINS
+x Player tries to fly placed sparrow unwalkable path, open space, contiguity maintained -> OK
+x Player tries to fly placed sparrow, open space, contiguity not maintained -> Exception
+x Player tries to move piece with wrong piece type listed -> Exception
+x Player tries to move piece that is not their own -> Exception
+x Red player tries to make 4th move without placing butterfly -> Exception
+x Blue player tries to make 4th move without placing butterfly -> Exception
+x Player moves piece, blue butterfly surrounded -> RED_WINS
+x Player moves piece, red Butterfly surrounded -> BLUE_WINS
+x Player moves piece, both players butterflies surrounded -> DRAW
+x Blue player resigns -> RED_WINS
+x Red player resigns -> BLUE_WINS

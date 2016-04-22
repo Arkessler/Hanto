@@ -1,17 +1,20 @@
-/**
- * 
+/*******************************************************************************
+ * This files was developed for CS4233: Object-Oriented Analysis & Design.
+ * The course was taken at Worcester Polytechnic Institute.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  */
 package hanto.studentirsark.common;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoPiece;
-import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 
 /**
@@ -21,26 +24,29 @@ import hanto.common.HantoPlayerColor;
 public class WalkMovement implements MovementStrategy {
 	
 	private int maxDistanceWalk;
+	GameBoard gameBoard;
 	
+	/**
+	 * Constructor for WalkMovement strategy
+	 * @param maxDistanceWalk the maxiumum walk distance for the strategy
+	 */
 	public WalkMovement(int maxDistanceWalk)
 	{
 		this.maxDistanceWalk = maxDistanceWalk;
 	}
 
-	BaseHantoGame game;
 	/* (non-Javadoc)
 	 * @see hanto.studentirsark.common.MovementStrategy#isValidMovement(java.util.Map, hanto.common.HantoPieceType, hanto.common.HantoCoordinate, hanto.common.HantoCoordinate, hanto.studentirsark.common.HantoCoordinateImpl, hanto.studentirsark.common.HantoPieceImpl)
 	 */
 	@Override
-	public void checkValidMovement(BaseHantoGame game, Map<HantoCoordinate, HantoPiece> board, 
-			HantoPlayerColor playerColor, HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to, 
-			HantoCoordinateImpl toCoordImpl, HantoPieceImpl pieceImpl)
+	public void checkValidMovement(GameBoard gameBoard, 
+			HantoPlayerColor playerColor, HantoCoordinate from, HantoCoordinate to, HantoPiece piece)
 					throws HantoException {
-		this.game = game;
+		this.gameBoard = gameBoard;
 		HantoCoordinateImpl fromCoordinateImpl = new HantoCoordinateImpl(from);
 		
 		
-		if (existsPathTo(board, from, to, maxDistanceWalk))
+		if (existsPathTo(gameBoard, from, to, maxDistanceWalk))
 		{
 			return;
 		}
@@ -59,7 +65,7 @@ public class WalkMovement implements MovementStrategy {
 				getIntersectionOfCoordinateLists(fromCoordImpl.getAdjacentCoordinates(), toCoordImpl.getAdjacentCoordinates());
 		for (int i = 0; i < intersectingAdjacentPieces.size(); i++)
 		{
-			if (game.getPieceAt(intersectingAdjacentPieces.get(i)) == null)
+			if (gameBoard.getPieceAt(intersectingAdjacentPieces.get(i)) == null)
 			{
 				validOpening = true;
 			}
@@ -87,7 +93,7 @@ public class WalkMovement implements MovementStrategy {
 		return retList;
 	}
 	
-	private boolean existsPathTo(Map<HantoCoordinate, HantoPiece> board, HantoCoordinate from, HantoCoordinate dest, 
+	private boolean existsPathTo(GameBoard mutableBoard, HantoCoordinate from, HantoCoordinate dest, 
 			int distanceWalk) throws HantoException
 	{
 		if (distanceWalk == 0)
@@ -100,7 +106,7 @@ public class WalkMovement implements MovementStrategy {
 		
 		for (HantoCoordinate coordinate: surroundingCoords)
 		{
-			if (checkPieceWalkOpening(from, coordinate) && game.getPieceAt(coordinate) == null)
+			if (checkPieceWalkOpening(from, coordinate) && gameBoard.getPieceAt(coordinate) == null)
 			{
 				walkableSurroundingCoords.add(coordinate);
 			}
@@ -114,12 +120,12 @@ public class WalkMovement implements MovementStrategy {
 		{
 			for (HantoCoordinate coordinate: walkableSurroundingCoords)
 			{
-				Map<HantoCoordinate, HantoPiece> boardCopy = new HashMap<HantoCoordinate, HantoPiece>(board);
-				boardCopy.put(new HantoCoordinateImpl(coordinate), new HantoPieceImpl(boardCopy.get(startCoordImpl)));
-				boardCopy.remove(from);
+				GameBoard boardCopy = new GameBoard(mutableBoard);
+				boardCopy.addPiece(new HantoCoordinateImpl(coordinate), new HantoPieceImpl(boardCopy.getPieceAt(startCoordImpl)));
+				boardCopy.removePiece(from);
 				try
 				{
-					game.checkContiguity(coordinate, boardCopy);
+					boardCopy.checkContiguity(coordinate);
 					if (existsPathTo(boardCopy, coordinate, dest, distanceWalk-1))
 					{
 						return true;

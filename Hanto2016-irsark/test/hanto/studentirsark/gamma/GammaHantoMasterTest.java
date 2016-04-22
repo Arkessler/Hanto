@@ -530,7 +530,6 @@ public class GammaHantoMasterTest {
 		game.makeMove(SPARROW, makeCoordinate(0,3), makeCoordinate(1,2));
 		game.makeMove(SPARROW, makeCoordinate(1,-1), makeCoordinate(1, -2));
 		assertEquals(BLUE_WINS, game.makeMove(SPARROW, makeCoordinate(2,0), makeCoordinate(1,0))); // 20,20
-		
 	}
 	
 	// Helper methods

@@ -32,10 +32,14 @@ public class HantoPieceImpl implements HantoPiece
 		this.type = type;
 	}
 	
+	/**
+	 * Copy constructor
+	 * @param piece the piece to copy
+	 */
 	public HantoPieceImpl(HantoPiece piece)
 	{
-		this.color = piece.getColor();
-		this.type = piece.getType();
+		color = piece.getColor();
+		type = piece.getType();
 	}
 	/*
 	 * @see hanto.common.HantoPiece#getColor()
