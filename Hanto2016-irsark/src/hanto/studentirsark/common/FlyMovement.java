@@ -20,12 +20,25 @@ import hanto.common.HantoPlayerColor;
  */
 public class FlyMovement implements MovementStrategy {
 
+	private int maxFlyDistance;
+	
 	/* (non-Javadoc)
 	 * @see hanto.studentirsark.common.MovementStrategy#isValidMovement(hanto.studentirsark.common.BaseHantoGame, java.util.Map, hanto.common.HantoPlayerColor, hanto.common.HantoPieceType, hanto.common.HantoCoordinate, hanto.common.HantoCoordinate, hanto.studentirsark.common.HantoCoordinateImpl, hanto.studentirsark.common.HantoPieceImpl)
 	 */
 	@Override
 	public void checkValidMovement(GameBoard gameBoard,
 			HantoPlayerColor playerColor, HantoCoordinate from, HantoCoordinate to,	HantoPiece piece) throws HantoException {
+		HantoCoordinateImpl fromCoordImpl = new HantoCoordinateImpl(from);
+		HantoCoordinateImpl toCoordImpl = new HantoCoordinateImpl(to);
+		if (fromCoordImpl.distanceBetween(toCoordImpl) > maxFlyDistance)
+		{
+			throw new HantoException("Cannot fly that far");
+		}
+	
 	}
-
+	
+	public FlyMovement( int maxFlyDistance)
+	{
+		this.maxFlyDistance = maxFlyDistance;
+	}
 }

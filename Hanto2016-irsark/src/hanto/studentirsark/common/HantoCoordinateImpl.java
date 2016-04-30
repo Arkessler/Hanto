@@ -115,4 +115,15 @@ public class HantoCoordinateImpl implements HantoCoordinate
 		retList.add(new HantoCoordinateImpl(x, y-1));
 		return retList;
 	}
+	
+	public int getZCoordinate()
+	{
+		return -(x+y);
+	}
+	
+	public int distanceBetween(HantoCoordinateImpl dest)
+	{
+		return (Math.abs(this.x - dest.getX()) + 
+				Math.abs(this.y - dest.getY()) + Math.abs(getZCoordinate() - dest.getZCoordinate()))/2;
+	}
 }

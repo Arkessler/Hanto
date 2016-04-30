@@ -31,11 +31,6 @@ import hanto.studentirsark.common.HantoCoordinateImpl;
  */
 public class BetaHantoGame extends BaseHantoGame implements HantoGame
 {
-	//Constants defined by problem
-	private final static int MAX_NUMBER_BUTTERFLIES = 1;
-	private final static int MAX_NUMBER_SPARROWS = 5;
-	private final static int MAX_NUMBER_TURNS = MAX_NUMBER_BUTTERFLIES + MAX_NUMBER_SPARROWS;
-	
 	/**
 	 * The Beta Hanto Constructor
 	 * @param firstPlayer is the color of the first player to move
@@ -43,20 +38,10 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame
 	public BetaHantoGame(HantoPlayerColor firstPlayer)
 	{
 		super(firstPlayer);
+		playerState = new BetaHantoPlayerState();
+		MAX_NUMBER_TURNS = 6;
 	}
-	
-	@Override
-	protected MoveResult checkMaxTurnCount(MoveResult surroundedCheckResult) {
-		if ((redTurnsTaken >= MAX_NUMBER_TURNS) && (blueTurnsTaken >= MAX_NUMBER_TURNS))
-		{
-			gameOver = true;
-			if (surroundedCheckResult == OK)
-			{
-				return DRAW;
-			}
-		}
-		return surroundedCheckResult;
-	}
+		
 	/* (non-Javadoc)
 	 * @see hanto.studentirsark.common.BaseHantoGame#placePiece(hanto.common.HantoPieceType, hanto.common.HantoCoordinate, hanto.studentirsark.common.HantoCoordinateImpl, hanto.studentirsark.common.HantoPieceImpl)
 	 */
@@ -71,35 +56,6 @@ public class BetaHantoGame extends BaseHantoGame implements HantoGame
 	@Override
 	protected void movePiece(HantoCoordinate from, HantoCoordinate to, HantoPiece piece) throws HantoException {
 		throw new HantoException("Cannot move pieces in Beta Hanto");
-	}
-
-	
-	/* (non-Javadoc)
-	 * @see hanto.studentirsark.common.BaseHantoGame#checkPieceCountValidity(hanto.common.HantoPieceType)
-	 */
-	@Override
-	protected void checkPieceCountValidity(HantoPieceType pieceType) throws HantoException {
-		if ((playerColor == HantoPlayerColor.BLUE) && (pieceType == HantoPieceType.BUTTERFLY) && (blueButterfliesPlaced < MAX_NUMBER_BUTTERFLIES))
-		{
-			blueButterfliesPlaced++;
-		}
-		else if ((playerColor == HantoPlayerColor.BLUE) && (pieceType == HantoPieceType.SPARROW) && (blueSparrowsPlaced < MAX_NUMBER_SPARROWS))
-		{
-			blueSparrowsPlaced++;
-		}
-		else if ((playerColor == HantoPlayerColor.RED) && (pieceType == HantoPieceType.BUTTERFLY) && (redButterfliesPlaced < MAX_NUMBER_BUTTERFLIES))
-		{
-			redButterfliesPlaced++;
-		}
-		else if ((playerColor == HantoPlayerColor.RED) && (pieceType == HantoPieceType.SPARROW) && (redSparrowsPlaced < MAX_NUMBER_SPARROWS))
-		{
-			redSparrowsPlaced++;
-		}
-		else
-		{
-			gameOver = true;
-			throw new HantoException("Too many of single type placed");
-		}
 	}
 
 }

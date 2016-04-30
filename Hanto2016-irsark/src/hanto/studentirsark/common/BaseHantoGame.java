@@ -42,16 +42,12 @@ public abstract class BaseHantoGame implements HantoGame{
 	protected HantoCoordinate blueButterfly;
 	protected boolean gameOver = false;
 	protected boolean gameAcceptsResignations = false;
+	protected PlayerState playerState;
 	//Turn tracking
 	protected int redTurnsTaken = 0;
 	protected int blueTurnsTaken = 0;
-	//Piece types placement tracking
-	protected int blueButterfliesPlaced = 0;
-	protected int blueSparrowsPlaced = 0;
-	protected int blueCrabsPlaced = 0;
-	protected int redButterfliesPlaced = 0;
-	protected int redSparrowsPlaced = 0;
-	protected int redCrabsPlaced = 0;
+	//Default maxTurnCount
+	protected static int MAX_NUMBER_TURNS = Integer.MAX_VALUE;
 	
 	/**
 	 * Constructor for BaseHantoGme
@@ -144,7 +140,17 @@ public abstract class BaseHantoGame implements HantoGame{
 	 * @param surroundedCheckResult the current MoveResult from MakeMove
 	 * @return the MoveResult based on if the maximum number of turns has been reached
 	 */
-	protected abstract MoveResult checkMaxTurnCount(MoveResult surroundedCheckResult);
+	protected MoveResult checkMaxTurnCount(MoveResult surroundedCheckResult) {
+		if ((redTurnsTaken >= MAX_NUMBER_TURNS) && (blueTurnsTaken >= MAX_NUMBER_TURNS))
+		{
+			gameOver = true;
+			if (surroundedCheckResult == OK)
+			{
+				return DRAW;
+			}
+		}
+		return surroundedCheckResult;
+	}
 
 	/* (non-Javadoc)
 	 * @see hanto.common.HantoGame#getPieceAt(hanto.common.HantoCoordinate)
@@ -185,7 +191,7 @@ public abstract class BaseHantoGame implements HantoGame{
 			HantoPiece piece) throws HantoException {
 		if (from==null)	//If placing a new piece
 		{
-			checkPieceCountValidity(piece.getType());
+			playerState = playerState.checkPieceCountValidity(piece.getType());
 			placePiece(to, piece);
 		}
 		else		//If moving a piece
@@ -371,7 +377,7 @@ public abstract class BaseHantoGame implements HantoGame{
 	protected void checkButterflyPlacement(HantoPieceType pieceType) throws HantoException {
 		if (playerColor == HantoPlayerColor.BLUE)
 		{
-			if ((blueButterfliesPlaced == 0) && (blueTurnsTaken == 4) && (pieceType != HantoPieceType.BUTTERFLY))
+			if ((blueButterfly == null) && (blueTurnsTaken == 4) && (pieceType != HantoPieceType.BUTTERFLY))
 				{
 					gameOver = true;
 					throw new HantoException("Blue player has not placed a butterfly");
@@ -379,7 +385,7 @@ public abstract class BaseHantoGame implements HantoGame{
 		}
 		else
 		{
-			if ((redButterfliesPlaced == 0) && (redTurnsTaken == 4) && (pieceType != HantoPieceType.BUTTERFLY))
+			if ((redButterfly == null) && (redTurnsTaken == 4) && (pieceType != HantoPieceType.BUTTERFLY))
 				{
 					gameOver = true;
 					throw new HantoException("Red player has not placed a butterfly");
@@ -393,7 +399,15 @@ public abstract class BaseHantoGame implements HantoGame{
 	 * @param piece the piece to place
 	 * @throws HantoException
 	 */
-	protected abstract void placePiece(HantoCoordinate to, HantoPiece piece) throws HantoException;
+	protected void placePiece(HantoCoordinate to, HantoPiece piece) throws HantoException {
+		//Ignore adjacency rules for the first two turns
+		if (blueTurnsTaken + redTurnsTaken > 2)
+		{
+			checkCoordinatePieceAdjacency(to);
+		}
+		HantoCoordinate toCoordImpl = new HantoCoordinateImpl(to);
+		gameBoard.addPiece(toCoordImpl, piece);
+	}
 
 	/**
 	 * move a piece from one location to another
@@ -405,11 +419,5 @@ public abstract class BaseHantoGame implements HantoGame{
 	protected abstract void movePiece (HantoCoordinate from, HantoCoordinate to,
 			HantoPiece piece) throws HantoException;
 	
-	/**
-	 * Check if the number of pieces meets the game criteria
-	 * @param pieceType the type of piece to check
-	 * @throws HantoException
-	 */
-	protected abstract void checkPieceCountValidity(HantoPieceType pieceType) throws HantoException;
 	
 }

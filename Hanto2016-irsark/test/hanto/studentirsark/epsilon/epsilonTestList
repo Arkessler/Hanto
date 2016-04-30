@@ -1,0 +1,58 @@
+Changes
+-Players may only resign if there are no valid movements left
+-2 Sparrows
+-Sparrows can only fly up to 4 hexes 
+-6 Crabs
+- Crabs can only move 1 space
+-4 Horses
+-Horses can jump
+
+TestList
+X EpsilonHanto initialized with BLUE moving first -> BLUE moves first
+X EpsilonHanto initialized with RED moving first -> RED moves first
+X First move is a sparrow at 0,0 -> OK
+X First move is a butterfly at 0,0 -> OK
+X First move is a crab at 0,0 -> OK
+X First move not at 0,0 -> Exception
+X Second move not at 0,0 -> OK
+X Players make 3 moves -> OK
+X First move retrievable after second move (No move overwriting)
+X Player places piece on another piece -> Exception
+X Player places more than one butterfly -> Exception
+X Player places more than two sparrows -> Exception
+X Player places more than six crabs -> Exception
+X Player places more than four horses -> Exception
+X Player places piece adjacent to piece of same color, non-adjacent to other color -> OK
+X Player places piece adjacent to piece of same color as well as piece of other color -> Exception
+X Player places piece non-adjacent to another piece -> Exception
+X Player tries to move non-existent piece -> Exception
+X Player tries to walk placed butterfly, trapped -> Exception
+X Player tries to walk placed crab, trapped -> Exception
+X Player tries to fly placed sparrow, trapped -> OK
+X Player tries to move place piece onto another piece -> Exception
+X Player tries to walk placed butterfly 1 hex, open space, contiguity maintained -> OK
+X Player tries to walk placed butterfly 1 hex, open space, contiguity not maintained -> Exception
+X Player tries to walk placed butterfly 2 hexes, open space, contiguity maintained -> Exception
+X Player tries to walk placed crab 1 hex, open space, contiguity maintained -> OK
+X Player tries to walk placed crab 2 hexes, open space, contiguity maintained -> Exception
+X Player tries to fly placed sparrow un-walkable path, open space, contiguity maintained, distance <= 5 -> OK
+X Player tries to fly placed sparrow un-walkable path, open space, contiguity maintained, distance > 5 -> Exception
+X Player tries to fly placed sparrow, open space, contiguity not maintained -> Exception
+X Player tries to jump horse in non-straight line -> Exception
+X Player tries to jump horse over empty hex -> Exception
+X Player tries to jump horse to adjacent hex -> Exception
+X Player tries to jump horse, emptying original position violates contiguity -> Exception
+X Player tries to jump horse on x axis, everything is valid -> OK
+X Player tries to jump horse on y axis, everything is valid -> OK
+X Player tries to jump horse on z axis, everything is valid -> OK
+X Player tries to move piece with wrong piece type listed -> Exception
+X Player tries to move piece that is not their own -> Exception
+X Red player tries to make 4th move without placing butterfly -> Exception
+X Blue player tries to make 4th move without placing butterfly -> Exception
+X Player moves piece, blue butterfly surrounded -> RED_WINS
+X Player moves piece, red Butterfly surrounded -> BLUE_WINS
+X Player moves piece, both players butterflies surrounded -> DRAW
+- Blue player resigns, moves left for blue -> Exception
+- Red player resigns, moves left for red -> Exception
+- Blue player resigns, no moves left for blue -> RED_WINS
+- Red player resigns, no moves left for red -> BLUE_WINS
