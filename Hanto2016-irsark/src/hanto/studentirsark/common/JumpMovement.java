@@ -92,7 +92,6 @@ public class JumpMovement implements MovementStrategy {
 			currCoord = new HantoCoordinateImpl(currCoord.getX()+incrementX, currCoord.getY()+incrementY);
 			if ((gameBoard.getPieceAt(currCoord) == null) && (!(currCoord.equals(to))))
 			{
-				System.out.println("VIOLATED VIOLENTLY at x:"+currCoord.getX()+" y:"+currCoord.getY());
 				throw new HantoException("Trying to jump over empty hex");
 			}
 		}

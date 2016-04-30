@@ -4,19 +4,31 @@
 package hanto.studentirsark.epsilon;
 
 import static hanto.common.HantoPieceType.*;
+import static hanto.common.HantoPlayerColor.RED;
+import static hanto.common.MoveResult.BLUE_WINS;
+import static hanto.common.MoveResult.OK;
+import static hanto.common.MoveResult.RED_WINS;
+
+import java.util.List;
 
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
+import hanto.common.HantoGameID;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
+import hanto.common.HantoPrematureResignationException;
+import hanto.common.MoveResult;
 import hanto.studentirsark.common.BaseHantoGame;
 import hanto.studentirsark.common.FlyMovement;
+import hanto.studentirsark.common.GameBoard;
 import hanto.studentirsark.common.HantoCoordinateImpl;
 import hanto.studentirsark.common.JumpMovement;
 import hanto.studentirsark.common.MovementStrategy;
+import hanto.studentirsark.common.ValidMoveGenerator;
 import hanto.studentirsark.common.WalkMovement;
+import hanto.tournament.HantoMoveRecord;
 
 /**
  * @author irshusdock, arkessler
@@ -70,5 +82,54 @@ public class EpsilonHantoGame extends BaseHantoGame implements HantoGame{
 		gameBoard.addPiece(toCoordImpl, piece);
 	}
 	
+	@Override
+	protected MoveResult checkResignation(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoPrematureResignationException {
+		ValidMoveGenerator vmg = ValidMoveGenerator.getInstance();
+		
+		if ((pieceType == null) && (from == null) && (to == null) && gameAcceptsResignations)
+		{
+			System.out.println("Attempted Resignation");
+			if (playerColor == RED)
+			{
+				GameBoard boardCopy = new GameBoard(gameBoard);
+				List<HantoMoveRecord> possibleMoves = vmg.generateValidMoves(HantoGameID.EPSILON_HANTO, boardCopy, 
+						playerState, playerColor, firstMove, redButterfly, redTurnsTaken);
+				
+				for (HantoMoveRecord moveRec: possibleMoves)
+				{
+					System.out.println("Move Record: to: ("+moveRec.getTo().getX()+","
+							+moveRec.getTo().getY()+"), pieceType: "+moveRec.getPiece().getPrintableName());
+				}
+				
+				if (possibleMoves.size() != 0)
+				{
+					throw new HantoPrematureResignationException();
+				}
+				return BLUE_WINS;
+			}
+			else
+			{
+				GameBoard boardCopy = new GameBoard(gameBoard);
+				List<HantoMoveRecord> possibleMoves = vmg.generateValidMoves(HantoGameID.EPSILON_HANTO, boardCopy, 
+						playerState, playerColor, firstMove, blueButterfly, blueTurnsTaken);
+				
+				for (HantoMoveRecord moveRec: possibleMoves)
+				{
+					System.out.println("Move Record: to: ("+moveRec.getTo().getX()+","
+								+moveRec.getTo().getY()+"), pieceType: "+moveRec.getPiece().getPrintableName());
+				}
+				
+				if (possibleMoves.size() != 0)
+				{
+					throw new HantoPrematureResignationException();
+				}
+				return RED_WINS;
+			}
+		}
+		else
+		{
+			return OK;
+		}
+	}
 		
 }

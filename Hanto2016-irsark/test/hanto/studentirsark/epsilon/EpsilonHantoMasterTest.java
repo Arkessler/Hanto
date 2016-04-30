@@ -12,6 +12,9 @@ import static hanto.common.MoveResult.OK;
 import static hanto.common.MoveResult.RED_WINS;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,8 +25,13 @@ import hanto.common.HantoGame;
 import hanto.common.HantoGameID;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
+import hanto.common.HantoPlayerColor;
+import hanto.common.HantoPrematureResignationException;
 import hanto.common.MoveResult;
 import hanto.studentirsark.HantoGameFactory;
+import hanto.studentirsark.common.GameBoard;
+import hanto.studentirsark.common.ValidMoveGenerator;
+import hanto.tournament.HantoMoveRecord;
 
 /**
  * @author arkessler, irshusdock
@@ -643,20 +651,20 @@ public class EpsilonHantoMasterTest {
 	@Test //43
 	public void redButterflySurrounded () throws HantoException
 	{
-		game = factory.makeHantoGame(HantoGameID.DELTA_HANTO, RED);
+		game = factory.makeHantoGame(HantoGameID.EPSILON_HANTO, RED);
 		game.makeMove(BUTTERFLY, null, makeCoordinate(0, 0));
-		game.makeMove(SPARROW, null, makeCoordinate(0, 1));
-		game.makeMove(SPARROW, null, makeCoordinate(-1, 0));
+		game.makeMove(CRAB, null, makeCoordinate(0, 1));
+		game.makeMove(CRAB, null, makeCoordinate(-1, 0));
 		game.makeMove(BUTTERFLY, null, makeCoordinate(0, 2));
 		game.makeMove(SPARROW, null, makeCoordinate(0, -1));
 		game.makeMove(BUTTERFLY, makeCoordinate(0, 2), makeCoordinate(-1, 2));
-		game.makeMove(SPARROW, null, makeCoordinate(1, -1));
+		game.makeMove(CRAB, null, makeCoordinate(1, -1));
 		game.makeMove(BUTTERFLY, makeCoordinate(-1, 2), makeCoordinate(0,2));
-		game.makeMove(SPARROW, makeCoordinate(-1, 0), makeCoordinate(-1, 1));
+		game.makeMove(CRAB, makeCoordinate(-1, 0), makeCoordinate(-1, 1));
 		game.makeMove(BUTTERFLY, makeCoordinate(0, 2), makeCoordinate(-1, 2));
 		game.makeMove(SPARROW, null, makeCoordinate(-1, 0));
 		game.makeMove(BUTTERFLY, makeCoordinate(-1, 2), makeCoordinate(0,2));
-		game.makeMove(SPARROW, makeCoordinate(1, -1), makeCoordinate(1, 0));
+		game.makeMove(CRAB, makeCoordinate(1, -1), makeCoordinate(1, 0));
 		game.makeMove(BUTTERFLY, makeCoordinate(0, 2), makeCoordinate(-1, 2));
 		MoveResult mr = game.makeMove(CRAB, null, makeCoordinate(1, -1));
 		assertEquals(mr, BLUE_WINS);
@@ -678,5 +686,18 @@ public class EpsilonHantoMasterTest {
 		game.makeMove(SPARROW, makeCoordinate(-2,1), makeCoordinate(-1, 1));
 		assertEquals(game.makeMove(SPARROW, makeCoordinate(2,0), makeCoordinate(1, 0)), DRAW);
 		
+	}
+	
+	@Test (expected = HantoPrematureResignationException.class)//45
+	public void firstMoveResign() throws HantoException
+	{
+		game.makeMove(null, null, null);
+	}
+	
+	@Test (expected = HantoPrematureResignationException.class)//46
+	public void secondMoveResign() throws HantoException
+	{
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,0));
+		game.makeMove(null, null, null);
 	}
 }

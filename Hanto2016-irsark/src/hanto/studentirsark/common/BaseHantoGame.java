@@ -27,6 +27,7 @@ import hanto.common.HantoGame;
 import hanto.common.HantoPiece;
 import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
+import hanto.common.HantoPrematureResignationException;
 import hanto.common.MoveResult;
 
 /**
@@ -116,8 +117,9 @@ public abstract class BaseHantoGame implements HantoGame{
 	 * @param pieceType
 	 * @param from
 	 * @param to
+	 * @throws HantoPrematureResignationException 
 	 */
-	private MoveResult checkResignation(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) {
+	protected MoveResult checkResignation(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoPrematureResignationException {
 		if ((pieceType == null) && (from == null) && (to == null) && gameAcceptsResignations)
 		{
 			if (playerColor == RED)

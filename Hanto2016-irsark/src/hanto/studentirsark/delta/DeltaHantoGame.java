@@ -6,6 +6,11 @@ package hanto.studentirsark.delta;
 import java.util.List;
 
 import static hanto.common.HantoPieceType.*;
+import static hanto.common.HantoPlayerColor.RED;
+import static hanto.common.MoveResult.BLUE_WINS;
+import static hanto.common.MoveResult.OK;
+import static hanto.common.MoveResult.RED_WINS;
+
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
@@ -74,4 +79,5 @@ public class DeltaHantoGame extends BaseHantoGame implements HantoGame {
 		gameBoard.removePiece(fromCoordinateImpl);
 		gameBoard.addPiece(toCoordImpl, piece);
 	}
+	
 }
