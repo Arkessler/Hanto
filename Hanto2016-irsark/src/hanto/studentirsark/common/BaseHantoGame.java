@@ -113,11 +113,12 @@ public abstract class BaseHantoGame implements HantoGame{
 		return checkMaxTurnCount(surroundedCheckResult);
 	}
 
-	/**
-	 * @param pieceType
-	 * @param from
-	 * @param to
-	 * @throws HantoPrematureResignationException 
+	/**Default check for resignation. If a game allows resignations and a player resigns, the opposite wins. otherwise return ok
+	 * @param pieceType the piece type of a move
+	 * @param from the location of a move
+	 * @param to the location to move to
+	 * @throws HantoPrematureResignationException if a player tries to resign to early 
+	 * @return the result of checking a move to see if it is a resignation move and if it is valid
 	 */
 	protected MoveResult checkResignation(HantoPieceType pieceType, HantoCoordinate from, HantoCoordinate to) throws HantoPrematureResignationException {
 		if ((pieceType == null) && (from == null) && (to == null) && gameAcceptsResignations)

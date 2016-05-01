@@ -689,15 +689,167 @@ public class EpsilonHantoMasterTest {
 	}
 	
 	@Test (expected = HantoPrematureResignationException.class)//45
-	public void firstMoveResign() throws HantoException
+	public void firstMoveCantResign() throws HantoException
 	{
 		game.makeMove(null, null, null);
 	}
 	
 	@Test (expected = HantoPrematureResignationException.class)//46
-	public void secondMoveResign() throws HantoException
+	public void secondMoveCantResign() throws HantoException
 	{
 		game.makeMove(BUTTERFLY, null, makeCoordinate(0,0));
 		game.makeMove(null, null, null);
 	}
+	
+	@Test (expected = HantoPrematureResignationException.class)//47
+	public void multipleMovesPiecesLeftCantResign() throws HantoException
+	{
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,0));
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,1));
+		game.makeMove(CRAB, null, makeCoordinate(-1, 0));
+		game.makeMove(CRAB, null, makeCoordinate(-1, 2));
+		game.makeMove(CRAB, null, makeCoordinate(0, -1));
+		game.makeMove(CRAB, null, makeCoordinate(0, 2));
+		game.makeMove(SPARROW, null, makeCoordinate(1, -1));
+		game.makeMove(SPARROW, null, makeCoordinate(1, 1));
+		game.makeMove(SPARROW, null, makeCoordinate(-2, 1));
+		game.makeMove(SPARROW, null, makeCoordinate(2, 0));
+		game.makeMove(null, null, null);
+	}
+	
+	@Test (expected = HantoPrematureResignationException.class)//49
+	public void blueNoPiecesValidMovesCantResign() throws HantoException
+	{
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,0));
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,-1));
+		game.makeMove(SPARROW, null, makeCoordinate(0,1));
+		game.makeMove(SPARROW, null, makeCoordinate(0,-2));
+		game.makeMove(SPARROW, null, makeCoordinate(0,2));
+		game.makeMove(SPARROW, null, makeCoordinate(0,-3));
+		game.makeMove(CRAB, null, makeCoordinate(0,3));
+		game.makeMove(CRAB, null, makeCoordinate(0,-4));
+		game.makeMove(CRAB, null, makeCoordinate(0,4));
+		game.makeMove(CRAB, null, makeCoordinate(0,-5));
+		game.makeMove(CRAB, null, makeCoordinate(0,5));
+		game.makeMove(CRAB, null, makeCoordinate(0,-6));
+		game.makeMove(CRAB, null, makeCoordinate(0,6));
+		game.makeMove(CRAB, null, makeCoordinate(0,-7));
+		game.makeMove(CRAB, null, makeCoordinate(0,7));
+		game.makeMove(CRAB, null, makeCoordinate(0,-8));
+		game.makeMove(CRAB, null, makeCoordinate(0,8));
+		game.makeMove(CRAB, null, makeCoordinate(0,-9));
+		game.makeMove(HORSE, null, makeCoordinate(0,9));
+		game.makeMove(HORSE, null, makeCoordinate(0,-10));
+		game.makeMove(HORSE, null, makeCoordinate(0,10));
+		game.makeMove(HORSE, null, makeCoordinate(0,-11));
+		game.makeMove(HORSE, null, makeCoordinate(0,11));
+		game.makeMove(HORSE, null, makeCoordinate(0,-12));
+		game.makeMove(HORSE, null, makeCoordinate(0,12));
+		game.makeMove(HORSE, null, makeCoordinate(0,-13));
+		game.makeMove(null, null, null);
+	}
+	
+	@Test (expected = HantoPrematureResignationException.class)//49
+	public void redNoPiecesValidMovesCantResign() throws HantoException
+	{
+		game = factory.makeHantoGame(HantoGameID.EPSILON_HANTO, RED);
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,0));
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,-1));
+		game.makeMove(SPARROW, null, makeCoordinate(0,1));
+		game.makeMove(SPARROW, null, makeCoordinate(0,-2));
+		game.makeMove(SPARROW, null, makeCoordinate(0,2));
+		game.makeMove(SPARROW, null, makeCoordinate(0,-3));
+		game.makeMove(CRAB, null, makeCoordinate(0,3));
+		game.makeMove(CRAB, null, makeCoordinate(0,-4));
+		game.makeMove(CRAB, null, makeCoordinate(0,4));
+		game.makeMove(CRAB, null, makeCoordinate(0,-5));
+		game.makeMove(CRAB, null, makeCoordinate(0,5));
+		game.makeMove(CRAB, null, makeCoordinate(0,-6));
+		game.makeMove(CRAB, null, makeCoordinate(0,6));
+		game.makeMove(CRAB, null, makeCoordinate(0,-7));
+		game.makeMove(CRAB, null, makeCoordinate(0,7));
+		game.makeMove(CRAB, null, makeCoordinate(0,-8));
+		game.makeMove(CRAB, null, makeCoordinate(0,8));
+		game.makeMove(CRAB, null, makeCoordinate(0,-9));
+		game.makeMove(HORSE, null, makeCoordinate(0,9));
+		game.makeMove(HORSE, null, makeCoordinate(0,-10));
+		game.makeMove(HORSE, null, makeCoordinate(0,10));
+		game.makeMove(HORSE, null, makeCoordinate(0,-11));
+		game.makeMove(HORSE, null, makeCoordinate(0,11));
+		game.makeMove(HORSE, null, makeCoordinate(0,-12));
+		game.makeMove(HORSE, null, makeCoordinate(0,12));
+		game.makeMove(HORSE, null, makeCoordinate(0,-13));
+		game.makeMove(null, null, null);
+	}
+	
+	@Test //50
+	public void blueNoPiecesNoValidMovesCanResign() throws HantoException
+	{
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,0));
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,-1));
+		game.makeMove(SPARROW, null, makeCoordinate(0,1));
+		game.makeMove(SPARROW, null, makeCoordinate(0,-2));
+		game.makeMove(SPARROW, null, makeCoordinate(0,2));
+		game.makeMove(SPARROW, null, makeCoordinate(0,-3));
+		game.makeMove(CRAB, null, makeCoordinate(0,3));
+		game.makeMove(CRAB, null, makeCoordinate(0,-4));
+		game.makeMove(CRAB, null, makeCoordinate(0,4));
+		game.makeMove(CRAB, null, makeCoordinate(0,-5));
+		game.makeMove(CRAB, null, makeCoordinate(0,5));
+		game.makeMove(CRAB, null, makeCoordinate(0,-6));
+		game.makeMove(CRAB, null, makeCoordinate(0,6));
+		game.makeMove(CRAB, null, makeCoordinate(0,-7));
+		game.makeMove(CRAB, null, makeCoordinate(0,7));
+		game.makeMove(CRAB, null, makeCoordinate(0,-8));
+		game.makeMove(HORSE, null, makeCoordinate(0,8));
+		game.makeMove(CRAB, null, makeCoordinate(0,-9));
+		game.makeMove(HORSE, null, makeCoordinate(0,9));
+		game.makeMove(HORSE, null, makeCoordinate(0,-10));
+		game.makeMove(HORSE, null, makeCoordinate(0,10));
+		game.makeMove(HORSE, null, makeCoordinate(0,-11));
+		game.makeMove(HORSE, null, makeCoordinate(0,11));
+		game.makeMove(HORSE, null, makeCoordinate(0,-12));
+		game.makeMove(CRAB, null, makeCoordinate(1,11));
+		game.makeMove(HORSE, null, makeCoordinate(0,-13));
+		game.makeMove(CRAB, makeCoordinate(1,11), makeCoordinate(0,12));
+		game.makeMove(HORSE, makeCoordinate(0,-13), makeCoordinate(0,13));
+		game.makeMove(null, null, null);
+	}
+	
+	@Test //51
+	public void redNoPiecesNoValidMovesCanResign() throws HantoException
+	{
+		game = factory.makeHantoGame(HantoGameID.EPSILON_HANTO, RED);
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,0));
+		game.makeMove(BUTTERFLY, null, makeCoordinate(0,-1));
+		game.makeMove(SPARROW, null, makeCoordinate(0,1));
+		game.makeMove(SPARROW, null, makeCoordinate(0,-2));
+		game.makeMove(SPARROW, null, makeCoordinate(0,2));
+		game.makeMove(SPARROW, null, makeCoordinate(0,-3));
+		game.makeMove(CRAB, null, makeCoordinate(0,3));
+		game.makeMove(CRAB, null, makeCoordinate(0,-4));
+		game.makeMove(CRAB, null, makeCoordinate(0,4));
+		game.makeMove(CRAB, null, makeCoordinate(0,-5));
+		game.makeMove(CRAB, null, makeCoordinate(0,5));
+		game.makeMove(CRAB, null, makeCoordinate(0,-6));
+		game.makeMove(CRAB, null, makeCoordinate(0,6));
+		game.makeMove(CRAB, null, makeCoordinate(0,-7));
+		game.makeMove(CRAB, null, makeCoordinate(0,7));
+		game.makeMove(CRAB, null, makeCoordinate(0,-8));
+		game.makeMove(HORSE, null, makeCoordinate(0,8));
+		game.makeMove(CRAB, null, makeCoordinate(0,-9));
+		game.makeMove(HORSE, null, makeCoordinate(0,9));
+		game.makeMove(HORSE, null, makeCoordinate(0,-10));
+		game.makeMove(HORSE, null, makeCoordinate(0,10));
+		game.makeMove(HORSE, null, makeCoordinate(0,-11));
+		game.makeMove(HORSE, null, makeCoordinate(0,11));
+		game.makeMove(HORSE, null, makeCoordinate(0,-12));
+		game.makeMove(CRAB, null, makeCoordinate(1,11));
+		game.makeMove(HORSE, null, makeCoordinate(0,-13));
+		game.makeMove(CRAB, makeCoordinate(1,11), makeCoordinate(0,12));
+		game.makeMove(HORSE, makeCoordinate(0,-13), makeCoordinate(0,13));
+		game.makeMove(null, null, null);
+	}
+	
+	
 }

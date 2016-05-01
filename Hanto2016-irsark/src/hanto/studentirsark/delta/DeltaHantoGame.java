@@ -3,26 +3,19 @@
  */
 package hanto.studentirsark.delta;
 
-import java.util.List;
-
-import static hanto.common.HantoPieceType.*;
-import static hanto.common.HantoPlayerColor.RED;
-import static hanto.common.MoveResult.BLUE_WINS;
-import static hanto.common.MoveResult.OK;
-import static hanto.common.MoveResult.RED_WINS;
+import static hanto.common.HantoPieceType.BUTTERFLY;
+import static hanto.common.HantoPieceType.CRAB;
+import static hanto.common.HantoPieceType.SPARROW;
 
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
 import hanto.common.HantoPiece;
-import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.common.MoveResult;
-import hanto.studentirsark.beta.BetaHantoPlayerState;
 import hanto.studentirsark.common.BaseHantoGame;
 import hanto.studentirsark.common.FlyMovement;
 import hanto.studentirsark.common.HantoCoordinateImpl;
-import hanto.studentirsark.common.HantoPieceImpl;
 import hanto.studentirsark.common.MovementStrategy;
 import hanto.studentirsark.common.WalkMovement;
 

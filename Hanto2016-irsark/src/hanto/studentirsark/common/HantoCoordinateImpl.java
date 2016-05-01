@@ -121,9 +121,14 @@ public class HantoCoordinateImpl implements HantoCoordinate
 		return -(x+y);
 	}
 	
+	/**
+	 * The hex distance between the point and the passed point
+	 * @param dest the point to check the distance to
+	 * @return the distance to the passed point
+	 */
 	public int distanceBetween(HantoCoordinateImpl dest)
 	{
-		return (Math.abs(this.x - dest.getX()) + 
-				Math.abs(this.y - dest.getY()) + Math.abs(getZCoordinate() - dest.getZCoordinate()))/2;
+		return (Math.abs(x - dest.getX()) + 
+				Math.abs(y - dest.getY()) + Math.abs(getZCoordinate() - dest.getZCoordinate()))/2;
 	}
 }

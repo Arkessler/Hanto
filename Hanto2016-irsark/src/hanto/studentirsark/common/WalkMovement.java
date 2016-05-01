@@ -42,12 +42,16 @@ public class WalkMovement implements MovementStrategy {
 	public void checkValidMovement(GameBoard gameBoard, 
 			HantoPlayerColor playerColor, HantoCoordinate from, HantoCoordinate to, HantoPiece piece)
 					throws HantoException {
-		this.gameBoard = gameBoard;
+		this.gameBoard = new GameBoard(gameBoard);
 		HantoCoordinateImpl fromCoordinateImpl = new HantoCoordinateImpl(from);
 		
 		
-		if (existsPathTo(gameBoard, from, to, maxDistanceWalk))
+		if (existsPathTo(this.gameBoard, from, to, maxDistanceWalk))
 		{
+			GameBoard boardCopy = new GameBoard(gameBoard);
+			boardCopy.removePiece(fromCoordinateImpl);
+			boardCopy.addPiece(new HantoCoordinateImpl(to), piece);
+			boardCopy.checkContiguity(to);
 			return;
 		}
 		throw new HantoException("Cannot find valid walking path to destination");

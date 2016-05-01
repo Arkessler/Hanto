@@ -20,11 +20,15 @@ public class JumpMovement implements MovementStrategy {
 	@Override
 	public void checkValidMovement(GameBoard gameBoard, HantoPlayerColor playerColor, HantoCoordinate from,
 			HantoCoordinate to, HantoPiece piece) throws HantoException {
+		GameBoard boardCopy = new GameBoard(gameBoard);
 		HantoCoordinateImpl fromCoordImpl = new HantoCoordinateImpl(from);
 		HantoCoordinateImpl toCoordImpl = new HantoCoordinateImpl(to);
 		checkLinearity(fromCoordImpl, toCoordImpl);
 		checkNotAdjacent(fromCoordImpl, toCoordImpl);
-		checkForEmptyHexInPath(fromCoordImpl, toCoordImpl, gameBoard);
+		checkForEmptyHexInPath(fromCoordImpl, toCoordImpl, boardCopy);
+		boardCopy.removePiece(fromCoordImpl);
+		boardCopy.addPiece(toCoordImpl, piece);
+		boardCopy.checkContiguity(to);
 	}
 
 	/**

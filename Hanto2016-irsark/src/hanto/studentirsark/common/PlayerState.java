@@ -21,10 +21,22 @@ public interface PlayerState {
 
 	/**
 	 * Update the number of pieces of passed type placed and check if too many have been placed
+	 * @param pieceType the type of the piece to update the count of
 	 * @throws HantoException if too many of the passed piece type have been placed
+	 * @return The opposite players PlayerState
 	 */
-	public PlayerState checkPieceCountValidity(HantoPieceType pieceType) throws HantoException;
+	PlayerState checkPieceCountValidity(HantoPieceType pieceType) throws HantoException;
 	
-	public void setOppositePlayerState(PlayerState playerState);
+	/**
+	 * Set the opposite player state (to return when checkPieceCountValidity is run)
+	 * @param playerState the player state to set oppositePlayerState to
+	 */
+	void setOppositePlayerState(PlayerState playerState);
+
+	/**
+	 * Undo the incrememnting on a certain piece type that comes from checkPieceCountValidity
+	 * @param pieceType the piece type to undo incrementing of
+	 */
+	void undoIncrement(HantoPieceType pieceType);
 	
 }

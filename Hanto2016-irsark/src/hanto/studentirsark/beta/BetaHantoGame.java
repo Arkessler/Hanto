@@ -12,16 +12,11 @@
 
 package hanto.studentirsark.beta;
 
-import static hanto.common.MoveResult.DRAW;
-import static hanto.common.MoveResult.OK;
-
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGame;
 import hanto.common.HantoPiece;
-import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
-import hanto.common.MoveResult;
 import hanto.studentirsark.common.BaseHantoGame;
 import hanto.studentirsark.common.HantoCoordinateImpl;
 

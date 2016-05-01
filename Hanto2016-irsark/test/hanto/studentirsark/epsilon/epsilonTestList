@@ -52,7 +52,9 @@ X Blue player tries to make 4th move without placing butterfly -> Exception
 X Player moves piece, blue butterfly surrounded -> RED_WINS
 X Player moves piece, red Butterfly surrounded -> BLUE_WINS
 X Player moves piece, both players butterflies surrounded -> DRAW
-- Blue player resigns, moves left for blue -> Exception
-- Red player resigns, moves left for red -> Exception
-- Blue player resigns, no moves left for blue -> RED_WINS
-- Red player resigns, no moves left for red -> BLUE_WINS
+X Blue player resigns, blue pieces to place left for blue -> Exception
+X Red player resigns, red pieces to place left for red -> Exception
+X Blue player resigns, no blue pieces left to place, moves left for blue -> Exception
+X Red player resigns, no red pieces left to place, moves left for red -> Exception
+X Blue player resigns, no moves left for blue -> RED_WINS
+X Red player resigns, no moves left for red -> BLUE_WINS

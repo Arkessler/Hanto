@@ -1,4 +1,3 @@
-package hanto.studentirsark.gamma;
 
 /*******************************************************************************
  * This files was developed for CS4233: Object-Oriented Analysis & Design.
@@ -9,6 +8,7 @@ package hanto.studentirsark.gamma;
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
+package hanto.studentirsark.gamma;
 
 import hanto.common.HantoException;
 import hanto.common.HantoPieceType;
@@ -55,6 +55,18 @@ public class GammaHantoPlayerState implements PlayerState {
 	
 	public void setOppositePlayerState(PlayerState playerState){
 		oppositePlayerState = playerState;
+	}
+	
+	public void undoIncrement(HantoPieceType pieceType)
+	{
+		if(pieceType == HantoPieceType.BUTTERFLY)
+		{
+			butterfliesPlaced--;
+		}
+		if(pieceType == HantoPieceType.SPARROW)
+		{
+			sparrowsPlaced--;
+		}
 	}
 
 }

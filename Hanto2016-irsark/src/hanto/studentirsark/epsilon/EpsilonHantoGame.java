@@ -88,18 +88,11 @@ public class EpsilonHantoGame extends BaseHantoGame implements HantoGame{
 		
 		if ((pieceType == null) && (from == null) && (to == null) && gameAcceptsResignations)
 		{
-			System.out.println("Attempted Resignation");
 			if (playerColor == RED)
 			{
 				GameBoard boardCopy = new GameBoard(gameBoard);
 				List<HantoMoveRecord> possibleMoves = vmg.generateValidMoves(HantoGameID.EPSILON_HANTO, boardCopy, 
 						playerState, playerColor, firstMove, redButterfly, redTurnsTaken);
-				
-				for (HantoMoveRecord moveRec: possibleMoves)
-				{
-					System.out.println("Move Record: to: ("+moveRec.getTo().getX()+","
-							+moveRec.getTo().getY()+"), pieceType: "+moveRec.getPiece().getPrintableName());
-				}
 				
 				if (possibleMoves.size() != 0)
 				{
@@ -113,11 +106,6 @@ public class EpsilonHantoGame extends BaseHantoGame implements HantoGame{
 				List<HantoMoveRecord> possibleMoves = vmg.generateValidMoves(HantoGameID.EPSILON_HANTO, boardCopy, 
 						playerState, playerColor, firstMove, blueButterfly, blueTurnsTaken);
 				
-				for (HantoMoveRecord moveRec: possibleMoves)
-				{
-					System.out.println("Move Record: to: ("+moveRec.getTo().getX()+","
-								+moveRec.getTo().getY()+"), pieceType: "+moveRec.getPiece().getPrintableName());
-				}
 				
 				if (possibleMoves.size() != 0)
 				{

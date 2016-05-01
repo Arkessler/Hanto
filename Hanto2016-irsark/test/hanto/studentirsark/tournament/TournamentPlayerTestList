@@ -1,0 +1,9 @@
+TournamentPlayerTestList
+
+X Can start a valid game
+X player goes first, player makes move -> OK
+X player goes second, player make move -> OK
+X player makes 2 valid moves -> OK
+X player makes 3 valid moves -> OK
+- player cannot place anymore pieces, makes move -> OK
+- player cannot make any more valid moves, move record -> null, null, null

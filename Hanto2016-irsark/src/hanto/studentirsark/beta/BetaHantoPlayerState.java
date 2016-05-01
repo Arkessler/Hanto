@@ -56,5 +56,17 @@ public class BetaHantoPlayerState implements PlayerState {
 	public void setOppositePlayerState(PlayerState playerState){
 		oppositePlayerState = playerState;
 	}
+	
+	public void undoIncrement(HantoPieceType pieceType)
+	{
+		if(pieceType == HantoPieceType.BUTTERFLY)
+		{
+			butterfliesPlaced--;
+		}
+		if(pieceType == HantoPieceType.SPARROW)
+		{
+			sparrowsPlaced--;
+		}
+	}
 
 }

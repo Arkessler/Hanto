@@ -1,12 +1,23 @@
-/**
- * 
- */
+/*******************************************************************************
+ * This files was developed for CS4233: Object-Oriented Analysis & Design.
+ * The course was taken at Worcester Polytechnic Institute.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+
 package hanto.studentirsark.common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import static hanto.common.HantoPieceType.*;
 import hanto.common.HantoCoordinate;
 import hanto.common.HantoException;
 import hanto.common.HantoGameID;
@@ -14,14 +25,36 @@ import hanto.common.HantoPieceType;
 import hanto.common.HantoPlayerColor;
 import hanto.tournament.HantoMoveRecord;
 
-
 /**
  * @author arkessler, irshusdock
  *
  */
 public class ValidMoveGenerator {
+	// Constants
+	
+	//Gamma Hanto
+	private final int GAMMA_HANTO_BUTTERFLY_DISTANCE = 1;
+	private final int GAMMA_HANTO_SPARROW_DISTANCE = 1;
+	
+	//Delta Hanto
+	private final int DELTA_HANTO_BUTTERFLY_DISTANCE = 1;
+	private final int DELTA_HANTO_SPARROW_DISTANCE = Integer.MAX_VALUE;
+	private final int DELTA_HANTO_CRAB_DISTANCE = 3;
+	
+	//Epsilon Hanto
+	private final int EPSILON_HANTO_BUTTERFLY_DISTANCE = 1;
+	private final int EPSILON_HANTO_SPARROW_DISTANCE = 4;
+	private final int EPSILON_HANTO_CRAB_DISTANCE = 1;
+
+
 	private static ValidMoveGenerator instance = null;
 	
+	private Map<HantoPieceType, MovementStrategy> movementStrategies;
+	
+	/**
+	 * Return the singleton instance of the class
+	 * @return the singleston instance of the class
+	 */
 	public static ValidMoveGenerator getInstance()
 	{
 		if (instance == null)
@@ -36,11 +69,23 @@ public class ValidMoveGenerator {
 		
 	}
 	
+	/**
+	 * Generate all valid moves a player can make
+	 * @param gameType the Game ID (delta, gamma, etc)
+	 * @param gameBoard the game board
+	 * @param playerState the current players piece counts/player state
+	 * @param playerColor the current players color
+	 * @param firstMove whether or not this is the first move
+	 * @param butterflyLoc the location of the current players butterfly
+	 * @param turnsTaken the number of turns the current player has taken
+	 * @return a list of all valid moves a player can take
+	 */
 	public List<HantoMoveRecord> generateValidMoves (HantoGameID gameType, GameBoard gameBoard, PlayerState playerState,
 			HantoPlayerColor playerColor, boolean firstMove, HantoCoordinate butterflyLoc, int turnsTaken)
 	{
 		List<HantoMoveRecord> retMoves = new ArrayList<HantoMoveRecord>();
 		
+		//Generate all possible piece placement moves
 		List<HantoMoveRecord> placementMoves;
 		if (firstMove)
 		{
@@ -51,13 +96,120 @@ public class ValidMoveGenerator {
 			placementMoves = generatePlacementMoves(gameType, gameBoard, playerState, playerColor, butterflyLoc, turnsTaken);
 		}
 		
-		
-		
 		for (HantoMoveRecord rec: placementMoves)
 		{
 			retMoves.add(rec);
 		}
+		
+		//Generate all possible piece movement moves only if butterfly has been placed
+		if(butterflyLoc != null)
+		{
+			List<HantoMoveRecord> movementMoves = generateMovementMoves(gameType, gameBoard, playerState, playerColor, butterflyLoc, turnsTaken);
+		
+			for (HantoMoveRecord rec: movementMoves)
+			{
+				retMoves.add(rec);
+			}
+		}
 		return retMoves;
+	}
+
+	/**
+	 * Generate all possible movement moves from a game board for a player
+	 * @param gameType the type of game it is (Beta, Gamma, etc.)
+	 * @param gameBoard the current game board
+	 * @param playerState the current player state
+	 * @param playerColor the current player color
+	 * @param butterflyLoc the location of the current players butterfly
+	 * @param turnsTaken the number of turns the current player has taken
+	 * @return a list of all the possible movement moves (i.e. moves that do not involve placing a piece)
+	 */
+	private List<HantoMoveRecord> generateMovementMoves(HantoGameID gameType, GameBoard gameBoard,
+			PlayerState playerState, HantoPlayerColor playerColor, HantoCoordinate butterflyLoc, int turnsTaken) {
+
+		//The list of all empty hexes adjacent to at least one game piece
+		Set<HantoCoordinate> emptyAdjacentHexes = new HashSet<HantoCoordinate>();
+		
+		//The list of all coordinates that are the current players color
+		List<HantoCoordinate> samePlayerPieces = new ArrayList<HantoCoordinate>();
+		
+		//The list of possible moves. Will be returned at the end of the function
+		List<HantoMoveRecord> possibleMoves = new ArrayList<HantoMoveRecord>();
+		
+		//Instantiate the movement strategies
+		generateMovementStrategies(gameType);
+		
+		//Add all locations adjacent to at least one other piece
+		for(HantoCoordinate coord: gameBoard.getBoard().keySet())
+		{
+			emptyAdjacentHexes.addAll(new HantoCoordinateImpl(coord).getAdjacentCoordinates());
+		}
+		
+		//Filter out locations with pieces already on them
+		for(HantoCoordinate coord: gameBoard.getBoard().keySet())
+		{
+			emptyAdjacentHexes.remove(new HantoCoordinateImpl(coord));
+		}
+		
+		//Generate all pieces on the game board that are the same color as the current player	
+		for(HantoCoordinate coord: gameBoard.getBoard().keySet())
+		{
+			if (gameBoard.getPieceAt(coord).getColor() == playerColor)
+			{
+				samePlayerPieces.add(coord);
+			}		
+		}
+		
+		//For every piece the player can move
+		for(HantoCoordinate fromCoord: samePlayerPieces)
+		{
+			//Try to move that piece to every possible valid movement location
+			MovementStrategy currentCoordsMoveStrat = movementStrategies.get(gameBoard.getPieceAt(fromCoord).getType());
+			for(HantoCoordinate toCoord: emptyAdjacentHexes)
+			{
+				try
+				{
+				currentCoordsMoveStrat.checkValidMovement(gameBoard, playerColor, fromCoord, toCoord, gameBoard.getPieceAt(fromCoord));
+				possibleMoves.add(new HantoMoveRecord(gameBoard.getPieceAt(fromCoord).getType(), fromCoord, toCoord));
+				}
+				catch (HantoException e)
+				{
+					continue;
+				}
+			}
+		}
+		
+		return possibleMoves;
+	}
+
+	/**
+	 * Based on the gametype, generate the jump, walk, and fly strategies and associate them with piece types
+	 * @param gameType the game id (beta, gamma, etc)
+	 */
+	private void generateMovementStrategies(HantoGameID gameType) {
+		movementStrategies = new HashMap<HantoPieceType, MovementStrategy>();
+		switch (gameType) {
+		case BETA_HANTO:
+			//pieces cannot move in beta so do not add anything to the strategies
+			break;
+		case GAMMA_HANTO:
+			//pieces can only walk 1 in Gamma hanto
+			movementStrategies.put(BUTTERFLY, new WalkMovement(GAMMA_HANTO_BUTTERFLY_DISTANCE));
+			movementStrategies.put(SPARROW, new WalkMovement(GAMMA_HANTO_SPARROW_DISTANCE));
+			break;
+		case DELTA_HANTO:
+			//pieces can walk and fly in Delta hanto
+			movementStrategies.put(BUTTERFLY, new WalkMovement(DELTA_HANTO_BUTTERFLY_DISTANCE));
+			movementStrategies.put(CRAB, new WalkMovement(DELTA_HANTO_CRAB_DISTANCE));
+			movementStrategies.put(SPARROW, new FlyMovement(DELTA_HANTO_SPARROW_DISTANCE));
+			break;
+		case EPSILON_HANTO:
+			movementStrategies.put(BUTTERFLY, new WalkMovement(EPSILON_HANTO_BUTTERFLY_DISTANCE));
+			movementStrategies.put(CRAB, new WalkMovement(EPSILON_HANTO_CRAB_DISTANCE));
+			movementStrategies.put(SPARROW, new FlyMovement(EPSILON_HANTO_SPARROW_DISTANCE));
+			movementStrategies.put(HORSE, new JumpMovement());
+			break;
+		}
 	}
 
 	/**
@@ -68,42 +220,22 @@ public class ValidMoveGenerator {
 	 */
 	private List<HantoMoveRecord> generateFirstMoves(PlayerState playerState) {
 		List<HantoMoveRecord> retMoves = new ArrayList<HantoMoveRecord>();
-		try
+		
+		
+		for(HantoPieceType pieceType : HantoPieceType.values())
 		{
-			playerState.checkPieceCountValidity(HantoPieceType.BUTTERFLY);
-			HantoMoveRecord newRec = new HantoMoveRecord(HantoPieceType.BUTTERFLY, null, new HantoCoordinateImpl(0, 0));
-			retMoves.add(newRec);	
-		} catch (HantoException exc)
-		{
-			
+			try
+			{
+				playerState.checkPieceCountValidity(pieceType);
+				playerState.undoIncrement(pieceType);
+				retMoves.add(new HantoMoveRecord(pieceType, null, new HantoCoordinateImpl(0,0)));
+			}
+			catch (HantoException e)
+			{
+				continue;
+			}
 		}
-		try
-		{
-			playerState.checkPieceCountValidity(HantoPieceType.SPARROW);
-			HantoMoveRecord newRec = new HantoMoveRecord(HantoPieceType.SPARROW, null, new HantoCoordinateImpl(0, 0));
-			retMoves.add(newRec);
-		} catch (HantoException exc)
-		{
-			
-		}
-		try
-		{
-			playerState.checkPieceCountValidity(HantoPieceType.CRAB);
-			HantoMoveRecord newRec = new HantoMoveRecord(HantoPieceType.CRAB, null, new HantoCoordinateImpl(0, 0));
-			retMoves.add(newRec);
-		} catch (HantoException exc)
-		{
-			
-		}
-		try
-		{
-			playerState.checkPieceCountValidity(HantoPieceType.HORSE);
-			HantoMoveRecord newRec = new HantoMoveRecord(HantoPieceType.HORSE, null, new HantoCoordinateImpl(0, 0));
-			retMoves.add(newRec);
-		} catch (HantoException exc)
-		{
-			
-		}
+		
 		
 		return retMoves;
 	}
@@ -168,62 +300,24 @@ public class ValidMoveGenerator {
 			}
 		}
 		
-		//Generate MoveRecords for butterflies
-		try
-		{
-			playerState.checkPieceCountValidity(HantoPieceType.BUTTERFLY);
-			for(HantoCoordinate coord: validCoordsToPlace)
-			{
-				HantoMoveRecord newRec = new HantoMoveRecord(HantoPieceType.BUTTERFLY, null, coord);
-				retMoves.add(newRec);
-			}
-		} catch (HantoException exc)
-		{
-			
-		}
-		
-		//Check if butterfly needs to be placed
-		if ((butterflyLoc == null) && (turnsTaken == 3))
-		{
-				//If a butterfly needs to be placed, don't generate any other moves
-		}
-		else	//Otherwise generate placements for the other valid piece types
+		for(HantoPieceType pieceType : HantoPieceType.values())
 		{
 			try
 			{
-				playerState.checkPieceCountValidity(HantoPieceType.SPARROW);
+				if((pieceType != BUTTERFLY) && (butterflyLoc == null) && (turnsTaken == 3))
+				{
+					continue;
+				}
+				playerState.checkPieceCountValidity(pieceType);
+				playerState.undoIncrement(pieceType);
 				for(HantoCoordinate coord: validCoordsToPlace)
 				{
-					HantoMoveRecord newRec = new HantoMoveRecord(HantoPieceType.SPARROW, null, coord);
-					retMoves.add(newRec);
+					retMoves.add(new HantoMoveRecord(pieceType, null, coord));
 				}
-			} catch (HantoException exc)
-			{
-				
 			}
-			try
+			catch (HantoException e)
 			{
-				playerState.checkPieceCountValidity(HantoPieceType.CRAB);
-				for(HantoCoordinate coord: validCoordsToPlace)
-				{
-					HantoMoveRecord newRec = new HantoMoveRecord(HantoPieceType.CRAB, null, coord);
-					retMoves.add(newRec);
-				}
-			} catch (HantoException exc)
-			{
-				
-			}
-			try
-			{
-				playerState.checkPieceCountValidity(HantoPieceType.HORSE);
-				for(HantoCoordinate coord: validCoordsToPlace)
-				{
-					HantoMoveRecord newRec = new HantoMoveRecord(HantoPieceType.HORSE, null, coord);
-					retMoves.add(newRec);
-				}
-			} catch (HantoException exc)
-			{
-				
+				continue;
 			}
 		}
 		

@@ -22,6 +22,15 @@ public class FlyMovement implements MovementStrategy {
 
 	private int maxFlyDistance;
 	
+	/**
+	 * Constructor for FlyMovement
+	 * @param maxFlyDistance the maximum distance the piece can fly
+	 */
+	public FlyMovement( int maxFlyDistance)
+	{
+		this.maxFlyDistance = maxFlyDistance;
+	}
+	
 	/* (non-Javadoc)
 	 * @see hanto.studentirsark.common.MovementStrategy#isValidMovement(hanto.studentirsark.common.BaseHantoGame, java.util.Map, hanto.common.HantoPlayerColor, hanto.common.HantoPieceType, hanto.common.HantoCoordinate, hanto.common.HantoCoordinate, hanto.studentirsark.common.HantoCoordinateImpl, hanto.studentirsark.common.HantoPieceImpl)
 	 */
@@ -34,11 +43,12 @@ public class FlyMovement implements MovementStrategy {
 		{
 			throw new HantoException("Cannot fly that far");
 		}
+		GameBoard boardCopy = new GameBoard(gameBoard);
+		boardCopy.removePiece(fromCoordImpl);
+		boardCopy.addPiece(toCoordImpl, piece);
+		boardCopy.checkContiguity(to);
 	
 	}
 	
-	public FlyMovement( int maxFlyDistance)
-	{
-		this.maxFlyDistance = maxFlyDistance;
-	}
+	
 }
